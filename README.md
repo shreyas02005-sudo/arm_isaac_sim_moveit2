@@ -48,7 +48,7 @@
 
 ## Overview
 
-This project connects a MoveIt 2 motion-planning stack to an arm simulated in NVIDIA Isaac Sim, with everything
+This project connects a MoveIt 2 motion planning stack to an arm simulated in NVIDIA Isaac Sim, with everything
 running natively on Windows 11 (no WSL2, no Linux machine).
 
 The usual way to execute MoveIt plans is `ros2_control`. On the tested Windows setup, `ros2_control_node` crashes
@@ -57,7 +57,7 @@ and Fast DDS. This repository works around that with a small Python **trajectory
 `FollowJointTrajectory` action server MoveIt expects, forwards the trajectory points to Isaac Sim as joint commands,
 and republishes the simulated joint states back to MoveIt.
 
-A C++ program (`sequence_demo`) uses the MoveIt `MoveGroupInterface` API to run a complete pick-style sequence.
+A C++ program (`sequence_demo`) uses the MoveIt `MoveGroupInterface` API to run a complete pick style sequence.
 
 ## Features
 
@@ -173,7 +173,7 @@ cd /d WS
 pixi run ros2 run my_robot_commander_cpp sequence_demo
 ```
 
-`isaac_arm.launch.xml` hard-codes `C:/arm_pkgs/` for the bridge script path (noted in a comment in the file), so
+`isaac_arm.launch.xml` hard codes `C:/arm_pkgs/` for the bridge script path (noted in a comment in the file), so
 keep the files from `bridge/` there or edit that path.
 
 Stop the stack with `scripts\stop_arm.bat` (press Ctrl+C once in the launch window first and wait for the prompt).
@@ -197,7 +197,7 @@ From the SRDF.
   action interface MoveIt already uses. MoveIt, RViz and the C++ API are unchanged.
 - **Isaac Sim as the physics and visual backend.** The Action Graph exchanges `JointState` messages with ROS, so the
   scene stays independent of MoveIt.
-- **Settle wait in the bridge.** Control is open-loop (no feedback loop on the commands), so the bridge includes a
+- **Settle wait in the bridge.** Control is open loop (no feedback loop on the commands), so the bridge includes a
   settle wait; it was part of the tested version used in the recorded run.
 - **Finger mirroring in the bridge.** Isaac Sim ignores the URDF `mimic` rule, so the bridge writes the mirrored
   finger command itself.
@@ -206,7 +206,7 @@ From the SRDF.
 
 ## Known limitations
 
-- `ros2_control_node` is not used (Windows crash); control is through the bridge, which is open-loop with a settle check.
+- `ros2_control_node` is not used (Windows crash); control is through the bridge, which is open loop with a settle check.
 - RViz shows `No active joints or end effectors found for group 'arm'` because the plain `rviz2` node is not given
   the kinematics parameters, so the **draggable end-effector marker is unavailable**. Planning from the
   MotionPlanning panel and from code works.
@@ -214,7 +214,7 @@ From the SRDF.
   which is not in the pixi environment. Only `test_moveit` and `sequence_demo` are built.
 - Isaac Sim ignores the URDF `mimic` rule, so the bridge mirrors the finger itself.
 - Connecting Isaac Sim on Windows to ROS inside WSL2 over DDS was tried at length and never worked. Do not use that path.
-- The launch file hard-codes `C:/arm_pkgs/` for the bridge script.
+- The launch file hard codes `C:/arm_pkgs/` for the bridge script.
 
 ## Scope
 
@@ -233,7 +233,7 @@ real robot hardware, other operating systems, other Isaac Sim or ROS versions, o
 
 | Job | What it checks |
 |---|---|
-| `lint` | Python files compile, XML/xacro/launch files are well-formed, YAML/RViz configs parse, local Markdown links resolve |
+| `lint` | Python files compile, XML/xacro/launch files are well formed, YAML/RViz configs parse, local Markdown links resolve |
 | `build` | The ROS packages build with `colcon` in a ROS 2 Jazzy container, and the main xacro expands |
 
 CI runs on Ubuntu to catch syntax and build errors early. It does **not** run Isaac Sim, the bridge against a
