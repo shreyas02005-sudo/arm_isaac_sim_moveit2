@@ -1,0 +1,16 @@
+# colcon / pixi build output
+build/
+install/
+log/
+.pixi/
+# logs and backups
+*.log
+*.tar
+*.tar.gz
+*.bak
+# Python
+__pycache__/
+*.pyc
+# Large media: attach to a GitHub Release or link instead
+*.mp4
+*.mov
