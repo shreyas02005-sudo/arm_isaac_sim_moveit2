@@ -1,0 +1,19 @@
+<launch>
+    <!-- EDIT the script path below if the repo is not at C:/arm_pkgs.
+         Use forward slashes: the launch system treats backslashes as escapes. -->
+    <let name="urdf_path"
+         value="$(find-pkg-share my_robot_description)/urdf/my_robot.urdf.xacro"/>
+    <let name="rviz_config_path"
+         value="$(find-pkg-share my_robot_bringup)/config/my_robot_moveit.rviz"/>
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher">
+        <param name="robot_description"
+               value="$(command 'xacro $(var urdf_path)')" />
+    </node>
+
+    <executable cmd="python C:/arm_pkgs/isaac_trajectory_bridge.py" output="screen"/>
+
+    <include file="$(find-pkg-share my_robot_moveit_config)/launch/move_group.launch.py" />
+
+    <node pkg="rviz2" exec="rviz2" output="screen" args="-d $(var rviz_config_path)" />
+</launch>

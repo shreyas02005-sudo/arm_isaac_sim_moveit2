@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- NOTE: with the Isaac bridge (bridge/isaac_arm.launch.xml) ros2_control_node is NOT started,
+       so this block is only read as part of the URDF. It is kept for a future ros2_control path.
+       The original default was: <plugin>mock_components/GenericSystem</plugin> -->
+  <ros2_control name="Arm" type="system">
+      <hardware>
+          <plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
+          <param name="joint_commands_topic">/isaac_joint_commands</param>
+          <param name="joint_states_topic">/isaac_joint_states</param>
+      </hardware>
+      <joint name="joint1">
+          <command_interface name="position"/>
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+      </joint>
+      <joint name="joint2">
+          <command_interface name="position"/>
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+      </joint>
+      <joint name="joint3">
+          <command_interface name="position"/>
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+      </joint>
+      <joint name="joint4">
+          <command_interface name="position"/>
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+      </joint>
+      <joint name="joint5">
+          <command_interface name="position"/>
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+      </joint>
+      <joint name="joint6">
+          <command_interface name="position"/>
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+      </joint>
+      <joint name="gripper_left_finger_joint">
+          <command_interface name="position"/>
+          <state_interface name="position">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+      </joint>
+
+  </ros2_control>
+
+</robot>
