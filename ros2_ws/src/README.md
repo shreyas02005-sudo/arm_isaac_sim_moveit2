@@ -1,14 +1,13 @@
-# Overlay files
+# ROS 2 packages
 
-These files are new or changed compared with the original arm packages. Copy them over the matching package
-inside your pixi workspace (`WS\src\<package>\...`) after copying the packages in.
+The five packages of the arm. The files listed in [`../../overlay/README.md`](../../overlay/README.md) are already applied here.
 
-| File | Change |
+| Package | Purpose |
 |---|---|
-| `my_robot_description/urdf/my_robot.ros2_control.xacro` | Hardware plugin switched from `mock_components/GenericSystem` to `topic_based_ros2_control/TopicBasedSystem` with the Isaac joint topics (not loaded by the bridge launch, kept for reference) |
-| `my_robot_moveit_config/config/moveit_controllers.yaml` | Added `trajectory_execution` timing keys |
-| `my_robot_commander_cpp/CMakeLists.txt` | Builds `test_moveit` and `sequence_demo` only; drops `commander` and its `example_interfaces` dependency |
-| `my_robot_commander_cpp/package.xml` | Removes the `example_interfaces` dependency |
-| `my_robot_commander_cpp/src/sequence_demo.cpp` | New: home, pose_2, gripper close, pose_1, gripper open |
+| `my_robot_description` | URDF/xacro for the arm and parallel gripper |
+| `my_robot_moveit_config` | MoveIt 2 configuration (SRDF, kinematics, controllers) |
+| `my_robot_bringup` | Launch file, RViz configuration |
+| `my_robot_interfaces` | `PoseCommand` message |
+| `my_robot_commander_cpp` | C++ programs; `test_moveit` and `sequence_demo` are built on Windows |
 
-`my_robot_commander_cpp/src/test_moveit.cpp` and `commander_template.cpp` are unchanged and come from your original package.
+Build instructions: [`../../docs/SETUP_WINDOWS.md`](../../docs/SETUP_WINDOWS.md).

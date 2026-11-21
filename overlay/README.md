@@ -1,5 +1,7 @@
 # Overlay files
 
+> In this repository the overlay is already applied in `ros2_ws/src`. This folder is kept for reference, to show which files differ from the original packages.
+
 These files are new or changed compared with the original arm packages. Copy them over the matching package
 inside your pixi workspace (`WS\src\<package>\...`) after copying the packages in.
 

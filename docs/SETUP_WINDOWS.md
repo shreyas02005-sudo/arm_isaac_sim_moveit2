@@ -29,7 +29,7 @@ Always run `cd /d WS` before any `pixi run ...`; pixi fails with `could not find
 
 1. Copy these packages from your arm workspace into `WS\src\`:
    `my_robot_description`, `my_robot_moveit_config`, `my_robot_bringup`, `my_robot_interfaces`, `my_robot_commander_cpp`.
-2. Apply the files in `overlay/` on top (see `overlay/README.md`).
+2. The files in `overlay/` are already applied in `ros2_ws/src` (see `overlay/README.md` for what changed).
 3. Copy `bridge\isaac_trajectory_bridge.py` and `bridge\isaac_arm.launch.xml` to `C:\arm_pkgs\` (or edit the script path
    inside the launch file).
 

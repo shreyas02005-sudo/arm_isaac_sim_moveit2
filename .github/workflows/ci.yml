@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (syntax, XML, YAML, links)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python files compile
+        run: python -m py_compile bridge/*.py isaac_sim/scripts/*.py
+
+      - name: XML, xacro and launch files are well-formed
+        run: |
+          python - <<'PY'
+          import glob, sys
+          import xml.etree.ElementTree as ET
+          files = []
+          for pattern in ("**/*.xacro", "**/*.urdf", "**/*.srdf", "**/*.launch.xml", "**/package.xml"):
+              files += glob.glob(pattern, recursive=True)
+          bad = 0
+          for f in sorted(set(files)):
+              try:
+                  ET.parse(f)
+                  print("ok  ", f)
+              except ET.ParseError as e:
+                  print("FAIL", f, e)
+                  bad += 1
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: YAML and RViz configs parse
+        run: |
+          pip install pyyaml
+          python - <<'PY'
+          import glob, sys, yaml
+          files = glob.glob("**/*.yaml", recursive=True) + glob.glob("**/*.yml", recursive=True) + glob.glob("**/*.rviz", recursive=True)
+          bad = 0
+          for f in sorted(set(files)):
+              try:
+                  with open(f, encoding="utf-8") as fh:
+                      yaml.safe_load(fh)
+                  print("ok  ", f)
+              except Exception as e:
+                  print("FAIL", f, e)
+                  bad += 1
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Local Markdown links resolve
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress "**/*.md"
+          fail: true
+
+  build:
+    name: Build (ROS 2 Jazzy, colcon)
+    runs-on: ubuntu-latest
+    container: ros:jazzy
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools and dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            python3-colcon-common-extensions python3-rosdep ros-jazzy-xacro
+          rosdep update --rosdistro jazzy
+          rosdep install --from-paths ros2_ws/src --ignore-src -r -y --rosdistro jazzy
+
+      - name: Build
+        shell: bash
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          cd ros2_ws
+          colcon build --event-handlers console_cohesion+
+
+      - name: Expand the robot xacro
+        shell: bash
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          source ros2_ws/install/setup.bash
+          xacro ros2_ws/src/my_robot_description/urdf/my_robot.urdf.xacro > /tmp/my_robot.urdf
+          test -s /tmp/my_robot.urdf
